@@ -1,0 +1,11 @@
+import type {ExponentVector} from "./types.js";
+const keys=(a:ExponentVector,b?:ExponentVector)=>new Set<bigint>([...a.keys(),...(b?[...b.keys()]:[])]);
+const clean=(m:Map<bigint,bigint>):ExponentVector=>{for(const [p,e] of m)if(e===0n)m.delete(p);return m};
+export const add=(a:ExponentVector,b:ExponentVector):ExponentVector=>clean(new Map([...keys(a,b)].map(p=>[p,(a.get(p)??0n)+(b.get(p)??0n)])));
+export const sub=(a:ExponentVector,b:ExponentVector):ExponentVector=>clean(new Map([...keys(a,b)].map(p=>[p,(a.get(p)??0n)-(b.get(p)??0n)])));
+export const neg=(a:ExponentVector):ExponentVector=>clean(new Map([...a].map(([p,e])=>[p,-e])));
+export const meet=(a:ExponentVector,b:ExponentVector):ExponentVector=>clean(new Map([...keys(a,b)].map(p=>[p, (a.get(p)??0n)<(b.get(p)??0n)?(a.get(p)??0n):(b.get(p)??0n)])));
+export const join=(a:ExponentVector,b:ExponentVector):ExponentVector=>clean(new Map([...keys(a,b)].map(p=>[p, (a.get(p)??0n)>(b.get(p)??0n)?(a.get(p)??0n):(b.get(p)??0n)])));
+export const eq=(a:ExponentVector,b:ExponentVector)=>[...keys(a,b)].every(p=>(a.get(p)??0n)===(b.get(p)??0n));
+export const zero=(a:ExponentVector)=>[...a.values()].every(e=>e===0n);
+export const transition=(from:ExponentVector,to:ExponentVector)=>sub(to,from);
