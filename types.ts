@@ -1,0 +1,16 @@
+export type PrimeFamily = string;
+export type Prime<K extends PrimeFamily=PrimeFamily>={value:bigint; family:K};
+export type PrimeLabel<K extends PrimeFamily=PrimeFamily>={prime:Prime<K>; label:string};
+export type Frame={prime:Prime; dimension:number};
+export type Axis={prime:Prime; frame:Frame; key:string};
+export type Polarity=1|-1;
+export type Entity<I=string,S=ExponentVector,T=ExponentVector>={id:I; prime:Prime<"entity">; frame:Frame; axis:Axis; semantic:S; temporal:T; metadata:Readonly<Record<string,unknown>>; polarity:Polarity};
+export type Effect=ReadonlySet<string>;
+export type Classifier<X,Y>={role:string; prime:Prime<"classifier">; apply:(x:X)=>Y; effect:Effect};
+export type Operator<X,Y>={apply:(x:X)=>Y; effect:Effect};
+export type Program<X,Y>={run:(x:X)=>Y; effect:Effect};
+export type Invariant<X>={mode:string; holds:(x:X)=>boolean};
+export type TypingJudgment<T>={pi:ReadonlyMap<string,PrimeFamily>; gamma:ReadonlyMap<string,string>; delta:ReadonlyMap<string,string>; phi:ReadonlyArray<Invariant<unknown>>; expression:unknown; result:T; effect:Effect};
+export type ExponentVector=ReadonlyMap<bigint,bigint>;
+export type Bridge<X=string,Y=string>={source:X; target:Y; displacement:ExponentVector};
+export type Trajectory<X=string,Y=string>={source:X; target:Y; bridges:ReadonlyArray<Bridge>};
